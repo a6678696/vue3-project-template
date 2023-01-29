@@ -3,6 +3,9 @@ import { defineStore } from "pinia"
 export const useMenuStore = defineStore('main', {
     state: () => {
         return {
+            // 垂直菜单默认不折叠
+            menuOpenOrNot: false,
+            // 菜单数组
             menuItems: [
                 {
                     id: '1',
@@ -55,5 +58,10 @@ export const useMenuStore = defineStore('main', {
                 }
             ]
         }
+    },
+    persist: {
+        key: 'useMenuStore',
+        storage: localStorage,
+        paths: ['menuOpenOrNot']
     }
 })

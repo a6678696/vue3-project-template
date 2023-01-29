@@ -2,11 +2,11 @@
     <div>
         <el-row class="tac">
             <el-col :span="menuWidth">
-                <el-menu background-color="#334256" :collapse="isCollapse" class="el-menu-vertical-demo"
+                <el-menu background-color="#334256" :collapse="store.menuOpenOrNot" class="el-menu-vertical-demo"
                     text-color="#fff" default-active="1" style="height: 100%">
                     <el-menu-item disabled style="cursor: default;">
                         <img src="/src/assets/images/logo.png" style="width: 40px;margin-left: -8px;" />
-                        <h3 v-show="!isCollapse" style="margin-left: 4px;">后台管理系统模板</h3>
+                        <h3 v-show="!store.menuOpenOrNot" style="margin-left: 4px;">后台管理系统模板</h3>
                     </el-menu-item>
                     <template v-for="(item, index) in store.menuItems" :key="index">
                         <template v-if="!item.children">
@@ -57,13 +57,13 @@
                         <div class="card-header">
                             <el-breadcrumb>
                                 <el-tooltip class="box-item" effect="dark" content="展开菜单" placement="right">
-                                    <el-icon @click="expandMenuOrNot" v-show="isCollapse" style="float: left;" size="16"
-                                        color="#57a1fd">
+                                    <el-icon @click="expandMenuOrNot" v-show="store.menuOpenOrNot" style="float: left;"
+                                        size="16" color="#57a1fd">
                                         <Expand style="cursor: pointer;" />
                                     </el-icon>
                                 </el-tooltip>
                                 <el-tooltip class="box-item" effect="dark" content="收起菜单" placement="right">
-                                    <el-icon @click="expandMenuOrNot" v-show="!isCollapse" style="float: left;"
+                                    <el-icon @click="expandMenuOrNot" v-show="!store.menuOpenOrNot" style="float: left;"
                                         size="16" color="#57a1fd">
                                         <Fold style="cursor: pointer;" />
                                     </el-icon>
@@ -152,11 +152,14 @@ const changCurrentCom = (currentComName) => {
         currentBreadName.value = "评价管理";
     }
 }
-const isCollapse = ref(false)
 const menuWidth = ref(4)
+const checkMenuOpenOrNot = () => {
+    store.menuOpenOrNot ? menuWidth.value = 1 : menuWidth.value = 4
+}
+checkMenuOpenOrNot()
 const expandMenuOrNot = () => {
-    isCollapse.value = !isCollapse.value
-    if (isCollapse.value) {
+    store.menuOpenOrNot = !store.menuOpenOrNot
+    if (store.menuOpenOrNot) {
         menuWidth.value = 1
     } else {
         menuWidth.value = 4
@@ -176,7 +179,8 @@ const expandMenuOrNot = () => {
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 100%;
+    width: 213px;
+    /* width: 100%; */
     min-height: 400px;
 }
 </style>
