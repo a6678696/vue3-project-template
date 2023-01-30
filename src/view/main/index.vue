@@ -74,9 +74,8 @@
                             <div>
                                 <el-dropdown>
                                     <span class="el-dropdown-link">
-                                        <el-avatar :size="28" src="https://image.zoutl.cn/hexo-blog/images/logo.png" />
-                                        <el-icon class="el-icon--right">
-                                            <CaretBottom />
+                                        <el-icon class="is-loading" size="16">
+                                            <Setting />
                                         </el-icon>
                                     </span>
                                     <template #dropdown>
@@ -116,11 +115,11 @@ import {
     Goods,
     SwitchButton,
     CollectionTag,
-    CaretBottom,
     EditPen,
     ChatDotRound,
     Expand,
-    Fold
+    Fold,
+    Setting
 } from "@element-plus/icons-vue";
 import userManage from '@/view/userManage/index.vue'
 import axiosUtil from '@/util/axios';
