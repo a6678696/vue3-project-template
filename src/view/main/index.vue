@@ -125,6 +125,8 @@ import {
 import userManage from '@/view/userManage/index.vue'
 import axiosUtil from '@/util/axios';
 import { useMenuStore } from "@/stores/index";
+import router from "@/router";
+
 const store = useMenuStore();
 const currentCom = shallowRef(userManage);
 const currentBreadName = ref('用户管理');
@@ -164,6 +166,26 @@ const expandMenuOrNot = () => {
     } else {
         menuWidth.value = 4
     }
+}
+
+//注销登录
+const logout = () => {
+    ElMessageBox
+        .confirm(
+            '你确定要注销登录吗?',
+            '提示',
+            {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        )
+        .then(() => {
+            window.sessionStorage.clear();
+            router.replace('/');
+        })
+        .catch(() => {
+        })
 }
 </script>
 

@@ -16,7 +16,8 @@
                             :prefix-icon="Lock" />
                     </el-form-item>
                     <div class="login-btn">
-                        <el-button type="primary" @click="handleLogin">登录</el-button>
+                        <el-button type="primary" @click="onShow">登录</el-button>
+                        <Vcode :show="isShow" @success="onSuccess" @close="onClose" />
                     </div>
                 </el-form>
             </el-card>
@@ -29,6 +30,8 @@ import { ref } from "vue";
 import { Lock, User } from "@element-plus/icons-vue";
 import router from "@/router";
 import axiosUtil from '@/util/axios';
+import Vcode from "vue3-puzzle-vcode"
+
 const form = ref({
     userName: "",
     password: "",
@@ -65,6 +68,31 @@ const handleLogin = async () => {
         ElMessage.error("服务器出错，请联系管理员！");
     }
 }
+
+// 用于控制右滑拼图验证模态框是否关闭
+const isShow = ref(false);
+// 打开模态框
+const onShow = () => {
+    if (form.value.userName === "") {
+        ElMessage.error("用户名不能为空");
+        return false;
+    }
+    if (form.value.password === "") {
+        ElMessage.error("密码不能为空");
+        return false;
+    }
+    isShow.value = true;
+};
+// 关闭模态框
+const onClose = () => {
+    isShow.value = false;
+};
+// 验证通过
+const onSuccess = () => {
+    onClose();
+    window.sessionStorage.setItem("token", "1")
+    router.replace('/main')
+};
 </script>
 
 <style scoped>
