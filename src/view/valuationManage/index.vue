@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>用户管理</p>
+        <p>评价管理</p>
     </div>
 </template>
 

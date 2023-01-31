@@ -19,14 +19,6 @@ let routes = [
         meta: {
             requireAuth: true
         }
-    },
-    {
-        path: '/userManage',
-        name: 'userManage',
-        component: () => import('@/view/userManage/index.vue'),
-        meta: {
-            requireAuth: true
-        }
     }
 ]
 

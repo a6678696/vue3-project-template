@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>用户管理</p>
+        <p>首页</p>
     </div>
 </template>
 
