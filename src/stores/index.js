@@ -7,62 +7,64 @@ export const useMenuStore = defineStore('main', {
             menuOpenOrNot: true,
             menuWidth: 4,
             nowSelectMenu: '3-1',
+            fullScreen: false,
+            i18nIsChinese: true,
             // 菜单数组
             menuItems: [
                 {
                     id: '1',
-                    iconName: 'House',
+                    iconName: 'home',
                     currentComName: 'index',
-                    title: '首页'
+                    title: 'menu.home'
                 },
                 {
                     id: '2',
-                    iconName: 'User',
+                    iconName: 'avatar',
                     currentComName: 'userManage',
-                    title: '用户管理'
+                    title: 'menu.userManage'
                 },
                 {
                     id: '3',
-                    iconName: "Bell",
+                    iconName: "announcement",
                     currentComName: 'announcementManage',
-                    title: '公告管理'
+                    title: 'menu.announcementManage'
                 },
                 {
                     id: '4',
-                    iconName: 'Tickets',
-                    title: '商品分类管理',
+                    iconName: 'bookmark',
+                    title: 'menu.typeManage',
                     children: [
                         {
                             id: '4-1',
-                            iconName: 'DocumentRemove',
+                            iconName: 'bookmark-one',
                             currentComName: 'bigTypeManage',
-                            title: '商品大类'
+                            title: 'menu.bigTypeManage'
                         },
                         {
                             id: '4-2',
-                            iconName: 'DocumentRemove',
+                            iconName: 'bookmark-one',
                             currentComName: 'smallTypeManage',
-                            title: '商品小类'
+                            title: 'menu.smallTypeManage'
                         }
                     ]
                 },
                 {
                     id: '5',
-                    iconName: 'Goods',
+                    iconName: 'commodity',
                     currentComName: 'goodsManage',
-                    title: '商品管理'
+                    title: 'menu.goodsManage'
                 },
                 {
                     id: '6',
-                    iconName: 'CollectionTag',
+                    iconName: 'order',
                     currentComName: 'orderManage',
-                    title: '订单管理'
+                    title: 'menu.orderManage'
                 },
                 {
                     id: '7',
-                    iconName: 'ChatDotRound',
+                    iconName: 'star',
                     currentComName: 'valuationManage',
-                    title: '评价管理'
+                    title: 'menu.valuationManage'
                 }
             ]
         }
@@ -77,7 +79,7 @@ export const useMenuStore = defineStore('main', {
     persist: {
         key: 'useMenuStore',
         storage: localStorage,
-        paths: ['menuOpenOrNot', 'menuWidth','nowSelectMenu']
+        paths: ['menuOpenOrNot', 'menuWidth', 'nowSelectMenu']
     }
 })
 
@@ -87,7 +89,7 @@ export const useTabStore = defineStore('useTabStore', {
             removeSelectTab: false,
             tabs: [
                 {
-                    name: '首页',
+                    name: 'menu.home',
                     selectOrNot: true,
                     currentComName: 'index'
                 }
@@ -146,7 +148,7 @@ export const useTabStore = defineStore('useTabStore', {
             if (this.tabs.length === 0) {
                 // 要添加的标签对象
                 const tab = {
-                    name: '首页',
+                    name: 'menu.home',
                     selectOrNot: true,
                     currentComName: 'index'
                 }

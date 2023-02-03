@@ -2,27 +2,23 @@
     <div>
         <el-row class="tac">
             <el-col :span="store.menuWidth">
-                <el-menu background-color="#334256" :collapse="!store.menuOpenOrNot" :collapse-transition="false"
-                    class="el-menu-vertical-demo el-menu" text-color="#fff" :default-active="store.nowSelectMenu"
+                <el-menu :background-color="store.menuOpenOrNot ? '#334256' : ''" :collapse="!store.menuOpenOrNot"
+                    :collapse-transition="false" class="el-menu-vertical-demo"
+                    :text-color="store.menuOpenOrNot ? '#fff' : ''" :default-active="store.nowSelectMenu"
                     style="height: 100%">
                     <el-menu-item disabled style="cursor: default;">
                         <img src="/src/assets/images/logo.png" style="width: 40px;margin-left: -8px;" />
-                        <h3 v-show="store.menuOpenOrNot" style="margin-left: 4px;">后台管理系统模板</h3>
+                        <h3 v-show="store.menuOpenOrNot" style="margin-left: 4px;">{{ t('menu.name') }}</h3>
                     </el-menu-item>
                     <template v-for="item in store.menuItems">
+                        <!-- 没有下级菜单 -->
                         <template v-if="!item.children">
                             <a @click="changCurrentCom('' + item.currentComName + '')">
                                 <el-menu-item :index="item.id">
                                     <el-icon>
-                                        <User v-show="item.iconName === 'User'" />
-                                        <Bell v-show="item.iconName === 'Bell'" />
-                                        <Tickets v-show="item.iconName === 'Tickets'" />
-                                        <Goods v-show="item.iconName === 'Goods'" />
-                                        <CollectionTag v-show="item.iconName === 'CollectionTag'" />
-                                        <ChatDotRound v-show="item.iconName === 'ChatDotRound'" />
-                                        <House v-show="item.iconName === 'House'" />
+                                        <IconPark :type="item.iconName" strokeWidth="2" />
                                     </el-icon>
-                                    <template #title>{{ item.title }}</template>
+                                    <template #title>{{ t(item.title) }}</template>
                                 </el-menu-item>
                             </a>
                         </template>
@@ -30,23 +26,17 @@
                             <el-sub-menu :index="item.id">
                                 <template #title>
                                     <el-icon>
-                                        <User v-show="item.iconName === 'User'" />
-                                        <Bell v-show="item.iconName === 'Bell'" />
-                                        <Tickets v-show="item.iconName === 'Tickets'" />
-                                        <Goods v-show="item.iconName === 'Goods'" />
-                                        <CollectionTag v-show="item.iconName === 'CollectionTag'" />
-                                        <ChatDotRound v-show="item.iconName === 'ChatDotRound'" />
-                                        <House v-show="item.iconName === 'House'" />
+                                        <IconPark :type="item.iconName" strokeWidth="2" />
                                     </el-icon>
-                                    <span>{{ item.title }}</span>
+                                    <span>{{ t(item.title) }}</span>
                                 </template>
                                 <a v-for="(item2, index2) in item.children" :key="index2"
                                     @click="changCurrentCom('' + item2.currentComName + '')">
                                     <el-menu-item :index="item2.id">
                                         <el-icon>
-                                            <DocumentRemove v-show="item2.iconName === 'DocumentRemove'" />
+                                            <IconPark :type="item2.iconName" strokeWidth="2" />
                                         </el-icon>
-                                        <template #title><span>{{ item2.title }}</span></template>
+                                        <template #title><span>{{ t(item2.title) }}</span></template>
                                     </el-menu-item>
                                 </a>
                             </el-sub-menu>
@@ -58,28 +48,49 @@
                 <el-card class="box-card">
                     <div class="card-header">
                         <el-breadcrumb>
-                            <el-tooltip class="box-item" effect="dark" content="展开菜单" placement="right">
+                            <el-tooltip class="box-item" effect="dark" :content="t('main.openMenu')" placement="right">
                                 <el-icon @click="store.openMenuOrNot" v-show="!store.menuOpenOrNot" style="float: left;"
                                     size="16" color="#57a1fd">
                                     <Expand style="cursor: pointer;" />
                                 </el-icon>
                             </el-tooltip>
-                            <el-tooltip class="box-item" effect="dark" content="收起菜单" placement="right">
+                            <el-tooltip class="box-item" effect="dark" :content="t('main.closeMenu')" placement="right">
                                 <el-icon @click="store.openMenuOrNot" v-show="store.menuOpenOrNot" style="float: left;"
                                     size="16" color="#57a1fd">
                                     <Fold style="cursor: pointer;" />
                                 </el-icon>
                             </el-tooltip>
                             <el-breadcrumb-item style="margin-left: 8px;"><strong style="cursor: pointer;"
-                                    @click="changCurrentCom('index')">首页</strong></el-breadcrumb-item>
-                            <el-breadcrumb-item v-for="item in currentBreadName">{{ item }}</el-breadcrumb-item>
+                                    @click="changCurrentCom('index')">{{ t('menu.home') }}</strong></el-breadcrumb-item>
+                            <el-breadcrumb-item v-for="item in currentBreadName">{{ t(item) }}</el-breadcrumb-item>
                         </el-breadcrumb>
                         <div>
+                            <el-tooltip class="box-item" effect="dark" :content="t('main.full')" placement="left">
+                                <IconPark v-show="!store.fullScreen" type="full-screen" size="17"
+                                    @click="fullScreenOrNot()" style="color: grey;" />
+                            </el-tooltip>
+                            <el-tooltip class="box-item" effect="dark" :content="t('main.noFull')" placement="left">
+                                <IconPark v-show="store.fullScreen" type="off-screen" size="17"
+                                    @click="fullScreenOrNot()" style="color: grey;" />
+                            </el-tooltip>
+                            <el-dropdown style="margin: 0px 15px;">
+                                <span class="el-dropdown-link" style="color: grey;">
+                                    <IconPark type="translate" size="18" />
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item :disabled="store.i18nIsChinese" @click="change('zh')">
+                                            中文
+                                        </el-dropdown-item>
+                                        <el-dropdown-item :disabled="!store.i18nIsChinese" @click="change('en')">
+                                            English
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
                             <el-dropdown>
-                                <span class="el-dropdown-link">
-                                    <el-icon class="is-loading" size="16">
-                                        <Setting />
-                                    </el-icon>
+                                <span class="el-dropdown-link" style="color: grey;">
+                                    <IconPark type="config" size="18" />
                                 </span>
                                 <template #dropdown>
                                     <el-dropdown-menu>
@@ -87,13 +98,13 @@
                                             <el-icon>
                                                 <EditPen />
                                             </el-icon>
-                                            修改密码
+                                            {{ t('main.modifyPassword') }}
                                         </el-dropdown-item>
                                         <el-dropdown-item @click="logout">
                                             <el-icon>
                                                 <SwitchButton />
                                             </el-icon>
-                                            注销
+                                            {{ t('main.logout') }}
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
@@ -108,14 +119,20 @@
                             style="cursor: pointer;" :effect="item.selectOrNot ? 'dark' : 'plain'" closable
                             class="el-tag-margin" @close="store2.removeTab('' + item.name + ''), openFirstTab()"><span
                                 v-show="item.selectOrNot">✿</span> {{
-                                    item.name
+                                    t(item.name)
                                 }}</el-tag>
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item :icon="Top" @click="closeAll()">关闭全部</el-dropdown-item>
-                            <el-dropdown-item :icon="Back" @click="closeLeft(index)">关闭左侧</el-dropdown-item>
-                            <el-dropdown-item :icon="Right" @click="closeRight(index)">关闭右侧</el-dropdown-item>
+                            <el-dropdown-item :icon="Top" @click="closeAll()">{{
+                                t('main.closeAll')
+                            }}</el-dropdown-item>
+                            <el-dropdown-item :icon="Back" @click="closeLeft(index)">{{
+                                t('main.closeLeft')
+                            }}</el-dropdown-item>
+                            <el-dropdown-item :icon="Right" @click="closeRight(index)">{{
+                                t('main.closeRight')
+                            }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -128,24 +145,16 @@
 </template>
 
 <script setup>
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, getCurrentInstance } from "vue";
+import { IconPark } from '@icon-park/vue-next/es/all';
 import {
-    Bell,
-    User,
-    Tickets,
-    DocumentRemove,
-    Goods,
     SwitchButton,
-    CollectionTag,
     EditPen,
-    ChatDotRound,
     Expand,
     Fold,
-    Setting,
     Back,
     Right,
     Top,
-    House
 } from "@element-plus/icons-vue";
 import axiosUtil from '@/util/axios';
 import router from "@/router";
@@ -159,6 +168,22 @@ import smallTypeManage from '@/view/smallTypeManage/index.vue'
 import goodsManage from '@/view/goodsManage/index.vue'
 import orderManage from '@/view/orderManage/index.vue'
 import valuationManage from '@/view/valuationManage/index.vue'
+import screenfull from "screenfull"
+import { useI18n } from 'vue-i18n'//要在js中使用国际化
+
+const { proxy } = getCurrentInstance();
+// 改变语言
+function change(type) {
+    // 设置语言
+    proxy.$i18n.locale = type;
+    // 当前是中文
+    if (type === 'zh') {
+        store.i18nIsChinese = true;
+    } else {
+        store.i18nIsChinese = false;
+    }
+}
+const { t } = useI18n()
 
 const store = useMenuStore();
 const store2 = useTabStore();
@@ -175,44 +200,44 @@ const changCurrentCom = (currentComName) => {
         store.nowSelectMenu = '1';
     }
     if (currentComName === "userManage") {
-        currentBreadName.value = ["用户管理"];
+        currentBreadName.value = ["menu.userManage"];
         currentCom.value = userManage;
         store.nowSelectMenu = '2';
     }
     if (currentComName === "announcementManage") {
-        currentBreadName.value = ["公告管理"];
+        currentBreadName.value = ["menu.announcementManage"];
         currentCom.value = announcementManage;
         store.nowSelectMenu = '3';
     }
     if (currentComName === "bigTypeManage") {
-        currentBreadName.value = ["商品分类管理", "商品大类"];
+        currentBreadName.value = ["menu.typeManage", "menu.bigTypeManage"];
         currentCom.value = bigTypeManage;
         store.nowSelectMenu = '4-1';
     }
     if (currentComName === "smallTypeManage") {
-        currentBreadName.value = ["商品分类管理", "商品小类"];
+        currentBreadName.value = ["menu.typeManage", "menu.smallTypeManage"];
         currentCom.value = smallTypeManage;
         store.nowSelectMenu = '4-2';
     }
     if (currentComName === "goodsManage") {
-        currentBreadName.value = ["商品管理"];
+        currentBreadName.value = ["menu.goodsManage"];
         currentCom.value = goodsManage;
         store.nowSelectMenu = '5';
     }
     if (currentComName === "orderManage") {
-        currentBreadName.value = ["订单管理"];
+        currentBreadName.value = ["menu.orderManage"];
         currentCom.value = orderManage;
         store.nowSelectMenu = '6';
     }
     if (currentComName === "valuationManage") {
-        currentBreadName.value = ["评价管理"];
+        currentBreadName.value = ["menu.valuationManage"];
         currentCom.value = valuationManage;
         store.nowSelectMenu = '7';
     }
     if (currentComName !== "index") {
         store2.addTab(currentBreadName.value[currentBreadName.value.length - 1], true, currentComName)
     } else {
-        store2.addTab('首页', true, currentComName)
+        store2.addTab('menu.home', true, currentComName)
     }
 }
 
@@ -294,7 +319,7 @@ const closeAll = () => {
     store2.tabs.splice(0, store2.tabs.length);
     // 要添加的标签对象
     const tab = {
-        name: '首页',
+        name: 'menu.home',
         selectOrNot: true,
         currentComName: 'index'
     }
@@ -315,6 +340,13 @@ const openSelectTab = () => {
     }
 }
 openSelectTab();
+
+const fullScreenOrNot = () => {
+    screenfull.toggle();
+    setTimeout(() => {
+        store.fullScreen = screenfull.isFullscreen
+    }, 100);
+}
 </script>
 
 <style scoped>

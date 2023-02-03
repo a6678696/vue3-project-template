@@ -5,7 +5,10 @@ import './style.css'
 import App from './App.vue'
 //引入router
 import router from './router'
+import i18n from './locales/i18n';
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
-createApp(App).use(pinia).use(router).mount('#app')
+
+const app = createApp(App)
+app.use(pinia).use(router).use(i18n).mount('#app')
