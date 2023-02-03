@@ -1,14 +1,31 @@
 import { defineStore } from "pinia"
 
-export const useMenuStore = defineStore('main', {
+export const useSettingStore = defineStore('useSettingStore', {
+    state: () => {
+        return {
+            showSetFullScreenButton: true,
+            fullScreen: false,
+            showSetInternationalizationButton: true,
+            i18nIsChinese: true,
+            showOpenOrCloseMenuButton: true,
+            showPageTab: true,
+            showLogo: true
+        }
+    },
+    persist: {
+        key: 'useSettingStore',
+        storage: localStorage,
+        paths: ['showSetFullScreenButton', 'showSetInternationalizationButton', 'showOpenOrCloseMenuButton', 'showPageTab', 'showLogo']
+    }
+})
+
+export const useMenuStore = defineStore('useMenuStore', {
     state: () => {
         return {
             // 垂直菜单默认打开
             menuOpenOrNot: true,
             menuWidth: 4,
             nowSelectMenu: '3-1',
-            fullScreen: false,
-            i18nIsChinese: true,
             // 菜单数组
             menuItems: [
                 {

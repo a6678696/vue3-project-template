@@ -1,26 +1,56 @@
 <template>
     <div>
+        <el-drawer :title="t('main.drawer.title')" v-model="showDrawerOrNot" direction="rtl"
+            :close-on-press-escape="false" size="40%">
+            <el-form>
+                <el-form-item :label="t('main.drawer.showSetFullScreenButton')">
+                    <el-switch v-model="store3.showSetFullScreenButton" :active-text="t('main.drawer.display')"
+                        :inactive-text="t('main.drawer.noDisplay')" />
+                </el-form-item>
+                <el-form-item :label="t('main.drawer.showSetInternationalizationButton')">
+                    <el-switch v-model="store3.showSetInternationalizationButton"
+                        :active-text="t('main.drawer.display')" :inactive-text="t('main.drawer.noDisplay')" />
+                </el-form-item>
+                <el-form-item :label="t('main.drawer.showOpenOrCloseMenuButton')">
+                    <el-switch v-model="store3.showOpenOrCloseMenuButton" :active-text="t('main.drawer.display')"
+                        :inactive-text="t('main.drawer.noDisplay')" />
+                </el-form-item>
+                <el-form-item :label="t('main.drawer.showPageTab')">
+                    <el-switch v-model="store3.showPageTab" :active-text="t('main.drawer.display')"
+                        :inactive-text="t('main.drawer.noDisplay')" />
+                </el-form-item>
+                <el-form-item :label="t('main.drawer.showLogo')">
+                    <el-switch v-model="store3.showLogo" :active-text="t('main.drawer.display')"
+                        :inactive-text="t('main.drawer.noDisplay')" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <div style="flex: auto">
+                    <el-button type="danger" @click="showDrawerOrNot = false">{{
+                        t('main.drawer.closeButtonText')
+                    }}</el-button>
+                </div>
+            </template>
+        </el-drawer>
         <el-row class="tac">
             <el-col :span="store.menuWidth">
                 <el-menu :background-color="store.menuOpenOrNot ? '#334256' : ''" :collapse="!store.menuOpenOrNot"
                     :collapse-transition="false" class="el-menu-vertical-demo"
                     :text-color="store.menuOpenOrNot ? '#fff' : ''" :default-active="store.nowSelectMenu"
                     style="height: 100%">
-                    <el-menu-item disabled style="cursor: default;">
+                    <el-menu-item disabled style="cursor: default;" v-show="store3.showLogo">
                         <img src="/src/assets/images/logo.png" style="width: 40px;margin-left: -8px;" />
                         <h3 v-show="store.menuOpenOrNot" style="margin-left: 4px;">{{ t('menu.name') }}</h3>
                     </el-menu-item>
                     <template v-for="item in store.menuItems">
                         <!-- 没有下级菜单 -->
                         <template v-if="!item.children">
-                            <a @click="changCurrentCom('' + item.currentComName + '')">
-                                <el-menu-item :index="item.id">
-                                    <el-icon>
-                                        <IconPark :type="item.iconName" strokeWidth="2" />
-                                    </el-icon>
-                                    <template #title>{{ t(item.title) }}</template>
-                                </el-menu-item>
-                            </a>
+                            <el-menu-item :index="item.id" @click="changCurrentCom('' + item.currentComName + '')">
+                                <el-icon>
+                                    <IconPark :type="item.iconName" strokeWidth="2" />
+                                </el-icon>
+                                <template #title>{{ t(item.title) }}</template>
+                            </el-menu-item>
                         </template>
                         <template v-else>
                             <el-sub-menu :index="item.id">
@@ -30,15 +60,13 @@
                                     </el-icon>
                                     <span>{{ t(item.title) }}</span>
                                 </template>
-                                <a v-for="(item2, index2) in item.children" :key="index2"
+                                <el-menu-item v-for="(item2, index2) in item.children" :key="index2" :index="item2.id"
                                     @click="changCurrentCom('' + item2.currentComName + '')">
-                                    <el-menu-item :index="item2.id">
-                                        <el-icon>
-                                            <IconPark :type="item2.iconName" strokeWidth="2" />
-                                        </el-icon>
-                                        <template #title><span>{{ t(item2.title) }}</span></template>
-                                    </el-menu-item>
-                                </a>
+                                    <el-icon>
+                                        <IconPark :type="item2.iconName" strokeWidth="2" />
+                                    </el-icon>
+                                    <template #title><span>{{ t(item2.title) }}</span></template>
+                                </el-menu-item>
                             </el-sub-menu>
                         </template>
                     </template>
@@ -49,51 +77,69 @@
                     <div class="card-header">
                         <el-breadcrumb>
                             <el-tooltip class="box-item" effect="dark" :content="t('main.openMenu')" placement="right">
-                                <el-icon @click="store.openMenuOrNot" v-show="!store.menuOpenOrNot" style="float: left;"
-                                    size="16" color="#57a1fd">
+                                <el-icon @click="store.openMenuOrNot"
+                                    v-show="!store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
+                                    style="float: left;" size="16" color="#57a1fd">
                                     <Expand style="cursor: pointer;" />
                                 </el-icon>
                             </el-tooltip>
                             <el-tooltip class="box-item" effect="dark" :content="t('main.closeMenu')" placement="right">
-                                <el-icon @click="store.openMenuOrNot" v-show="store.menuOpenOrNot" style="float: left;"
-                                    size="16" color="#57a1fd">
+                                <el-icon @click="store.openMenuOrNot"
+                                    v-show="store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
+                                    style="float: left;" size="16" color="#57a1fd">
                                     <Fold style="cursor: pointer;" />
                                 </el-icon>
                             </el-tooltip>
-                            <el-breadcrumb-item style="margin-left: 8px;"><strong style="cursor: pointer;"
-                                    @click="changCurrentCom('index')">{{ t('menu.home') }}</strong></el-breadcrumb-item>
+                            <!-- 首页面包屑 -->
+                            <el-breadcrumb-item :style="store3.showOpenOrCloseMenuButton ? 'margin-left: 8px' : ''">
+                                <strong style="cursor: pointer;" @click="changCurrentCom('index')">
+                                    {{ t('menu.home') }}
+                                </strong>
+                            </el-breadcrumb-item>
+                            <!-- 菜单名称面包屑 -->
                             <el-breadcrumb-item v-for="item in currentBreadName">{{ t(item) }}</el-breadcrumb-item>
                         </el-breadcrumb>
                         <div>
+                            <!-- 全屏显示按钮 -->
                             <el-tooltip class="box-item" effect="dark" :content="t('main.full')" placement="left">
-                                <IconPark v-show="!store.fullScreen" type="full-screen" size="17"
-                                    @click="fullScreenOrNot()" style="color: grey;" />
+                                <IconPark v-show="!store3.fullScreen && store3.showSetFullScreenButton"
+                                    type="full-screen" size="17" @click="fullScreenOrNot()"
+                                    style="color: grey;margin-right: 15px;" />
                             </el-tooltip>
                             <el-tooltip class="box-item" effect="dark" :content="t('main.noFull')" placement="left">
-                                <IconPark v-show="store.fullScreen" type="off-screen" size="17"
-                                    @click="fullScreenOrNot()" style="color: grey;" />
+                                <IconPark v-show="store3.fullScreen && store3.showSetFullScreenButton" type="off-screen"
+                                    size="17" @click="fullScreenOrNot()" style="color: grey;margin-right: 15px;" />
                             </el-tooltip>
-                            <el-dropdown style="margin: 0px 15px;">
+                            <!-- 国际化下拉菜单 -->
+                            <el-dropdown>
                                 <span class="el-dropdown-link" style="color: grey;">
-                                    <IconPark type="translate" size="18" />
+                                    <IconPark type="translate" size="18"
+                                        v-show="store3.showSetInternationalizationButton" style="margin-right: 15px;" />
                                 </span>
                                 <template #dropdown>
                                     <el-dropdown-menu>
-                                        <el-dropdown-item :disabled="store.i18nIsChinese" @click="change('zh')">
+                                        <el-dropdown-item :disabled="store3.i18nIsChinese" @click="change('zh')">
                                             中文
                                         </el-dropdown-item>
-                                        <el-dropdown-item :disabled="!store.i18nIsChinese" @click="change('en')">
+                                        <el-dropdown-item :disabled="!store3.i18nIsChinese" @click="change('en')">
                                             English
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
+                            <!-- 设置下拉菜单 -->
                             <el-dropdown>
                                 <span class="el-dropdown-link" style="color: grey;">
                                     <IconPark type="config" size="18" />
                                 </span>
                                 <template #dropdown>
                                     <el-dropdown-menu>
+                                        <el-dropdown-item @click="showDrawerOrNot = true">
+                                            <el-icon>
+                                                <Odometer />
+                                            </el-icon>
+                                            {{ t('main.systemSetting') }}
+                                        </el-dropdown-item>
                                         <el-dropdown-item @click="modifyDialogVisible = true">
                                             <el-icon>
                                                 <EditPen />
@@ -113,7 +159,8 @@
                     </div>
                 </el-card>
                 <span style="margin-left: 11px;" v-show="!store.menuOpenOrNot"></span>
-                <el-dropdown trigger="contextmenu" v-for="(item, index) in store2.tabs">
+                <!-- 已打开的页面标签 -->
+                <el-dropdown trigger="contextmenu" v-for="(item, index) in store2.tabs" v-show="store3.showPageTab">
                     <span class="el-dropdown-link">
                         <el-tag @click="changCurrentCom('' + item.currentComName + '')" size="default"
                             style="cursor: pointer;" :effect="item.selectOrNot ? 'dark' : 'plain'" closable
@@ -155,10 +202,11 @@ import {
     Back,
     Right,
     Top,
+    Odometer
 } from "@element-plus/icons-vue";
 import axiosUtil from '@/util/axios';
 import router from "@/router";
-import { useMenuStore, useTabStore } from "@/stores/index";
+import { useMenuStore, useTabStore, useSettingStore } from "@/stores/index";
 // 导入可以打开的标签页
 import index from '@/view/index/index.vue'
 import userManage from '@/view/userManage/index.vue'
@@ -178,15 +226,22 @@ function change(type) {
     proxy.$i18n.locale = type;
     // 当前是中文
     if (type === 'zh') {
-        store.i18nIsChinese = true;
+        store3.i18nIsChinese = true;
     } else {
-        store.i18nIsChinese = false;
+        store3.i18nIsChinese = false;
     }
 }
 const { t } = useI18n()
 
 const store = useMenuStore();
 const store2 = useTabStore();
+const store3 = useSettingStore();
+store3.$subscribe((mutation, state) => {
+    if (state.showOpenOrCloseMenuButton === false) {
+        store.menuOpenOrNot = true;
+        store.menuWidth = 4;
+    }
+});
 // 正在打开的页面
 const currentCom = shallowRef(index);
 // 正在打开的页面名称
@@ -245,11 +300,11 @@ const changCurrentCom = (currentComName) => {
 const logout = () => {
     ElMessageBox
         .confirm(
-            '你确定要注销登录吗?',
-            '提示',
+            t('main.elMessageBoxContentText'),
+            t('main.elMessageBoxHeadText'),
             {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+                confirmButtonText: t('main.confirmButtonText'),
+                cancelButtonText: t('main.cancelButtonText'),
                 type: 'warning',
             }
         )
@@ -341,12 +396,15 @@ const openSelectTab = () => {
 }
 openSelectTab();
 
+// 页面全屏与否
 const fullScreenOrNot = () => {
     screenfull.toggle();
     setTimeout(() => {
-        store.fullScreen = screenfull.isFullscreen
+        store3.fullScreen = screenfull.isFullscreen
     }, 100);
 }
+
+const showDrawerOrNot = ref(false)
 </script>
 
 <style scoped>

@@ -1,23 +1,40 @@
 <template>
     <div class="bg-pic">
+        <el-dropdown style="float: right;margin: 22px 22px 0px 0px;">
+            <span class="el-dropdown-link">
+                <IconPark type="translate" size="22" />
+            </span>
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item :disabled="store.i18nIsChinese" @click="change('zh')">
+                        中文
+                    </el-dropdown-item>
+                    <el-dropdown-item :disabled="!store.i18nIsChinese" @click="change('en')">
+                        English
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
         <div class="title-and-card">
             <el-card class="box-card">
                 <template #header>
                     <div class="card-header">
-                        <span>后台登录</span>
+                        <span>{{ t('login.cardTitle') }}</span>
                     </div>
                 </template>
                 <el-form :model="form" :rules="rules">
                     <el-form-item prop="userName">
-                        <el-input v-model="form.userName" clearable placeholder="请输入用户名..." :prefix-icon="User" />
+                        <el-input v-model="form.userName" clearable :placeholder="t('login.userNamePlaceholder')"
+                            :prefix-icon="User" />
                     </el-form-item>
                     <el-form-item prop="password">
-                        <el-input type="password" v-model="form.password" clearable show-password placeholder="请输入密码..."
-                            :prefix-icon="Lock" />
+                        <el-input type="password" v-model="form.password" clearable show-password
+                            :placeholder="t('login.passwordPlaceholder')" :prefix-icon="Lock" />
                     </el-form-item>
                     <div class="login-btn">
-                        <el-button type="primary" @click="onShow">登录</el-button>
-                        <Vcode :show="isShow" @success="onSuccess" @close="onClose" />
+                        <el-button type="primary" @click="onShow">{{ t('login.buttonText') }}</el-button>
+                        <Vcode :show="isShow" @success="onSuccess" @close="onClose"
+                            :successText="t('login.puzzle.successText')" :failText="t('login.puzzle.failText')" :sliderText="t('login.puzzle.sliderText')"/>
                     </div>
                 </el-form>
             </el-card>
@@ -26,11 +43,30 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { Lock, User } from "@element-plus/icons-vue";
+import { ref, getCurrentInstance } from "vue"
+import { Lock, User } from "@element-plus/icons-vue"
 import router from "@/router";
-import axiosUtil from '@/util/axios';
+import axiosUtil from '@/util/axios'
 import Vcode from "vue3-puzzle-vcode"
+import { IconPark } from '@icon-park/vue-next/es/all'
+import { useI18n } from 'vue-i18n'//要在js中使用国际化
+
+import { useSettingStore } from "@/stores/index";
+const store = useSettingStore();
+
+const { proxy } = getCurrentInstance();
+// 改变语言
+function change(type) {
+    // 设置语言
+    proxy.$i18n.locale = type;
+    // 当前是中文
+    if (type === 'zh') {
+        store.i18nIsChinese = true;
+    } else {
+        store.i18nIsChinese = false;
+    }
+}
+const { t } = useI18n()
 
 const form = ref({
     userName: "",
@@ -41,14 +77,6 @@ const rules = {
     password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 };
 const handleLogin = async () => {
-    if (form.value.userName === "") {
-        ElMessage.error("用户名不能为空");
-        return false;
-    }
-    if (form.value.password === "") {
-        ElMessage.error("密码不能为空");
-        return false;
-    }
     let params = new URLSearchParams();
     params.append("userName", form.value.userName);
     params.append("password", form.value.password);
@@ -74,11 +102,11 @@ const isShow = ref(false);
 // 打开模态框
 const onShow = () => {
     if (form.value.userName === "") {
-        ElMessage.error("用户名不能为空");
+        ElMessage.error(t('login.userNameNullHint'));
         return false;
     }
     if (form.value.password === "") {
-        ElMessage.error("密码不能为空");
+        ElMessage.error(t('login.passwordNullHint'));
         return false;
     }
     isShow.value = true;
