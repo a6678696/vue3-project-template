@@ -105,7 +105,7 @@ export const useTabStore = defineStore('useTabStore', {
             removeSelectTab: false,
             tabs: [
                 {
-                    name: 'menu.home',
+                    name: '首页',
                     selectOrNot: true,
                     currentComName: 'index'
                 }
@@ -164,7 +164,7 @@ export const useTabStore = defineStore('useTabStore', {
             if (this.tabs.length === 0) {
                 // 要添加的标签对象
                 const tab = {
-                    name: 'menu.home',
+                    name: '首页',
                     selectOrNot: true,
                     currentComName: 'index'
                 }
