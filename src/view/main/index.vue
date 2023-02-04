@@ -1,8 +1,9 @@
 <template>
-    <div>
+    <div style="overflow-x: hidden">
+        <!-- 系统设置抽屉 -->
         <el-drawer :title="t('main.drawer.title')" v-model="showDrawerOrNot" direction="rtl"
             :close-on-press-escape="false" size="40%">
-            <el-form>
+            <el-form label-position="left" label-width="40%">
                 <el-form-item :label="t('main.drawer.showSetFullScreenButton')">
                     <el-switch v-model="store3.showSetFullScreenButton" :active-text="t('main.drawer.display')"
                         :inactive-text="t('main.drawer.noDisplay')" />
@@ -23,6 +24,9 @@
                     <el-switch v-model="store3.showLogo" :active-text="t('main.drawer.display')"
                         :inactive-text="t('main.drawer.noDisplay')" />
                 </el-form-item>
+                <el-form-item :label="t('main.drawer.menuAndContentWidth')" v-show="!store.menuOpenOrNot">
+                    <el-slider v-model="store3.mainContentLetf" show-input size="small"/>
+                </el-form-item>
             </el-form>
             <template #footer>
                 <div style="flex: auto">
@@ -32,12 +36,13 @@
                 </div>
             </template>
         </el-drawer>
-        <el-row class="tac">
+        <!-- 主体内容 -->
+        <el-row gutter="2">
+            <!-- 左侧菜单 -->
             <el-col :span="store.menuWidth">
-                <el-menu :background-color="store.menuOpenOrNot ? '#334256' : ''" :collapse="!store.menuOpenOrNot"
-                    :collapse-transition="false" class="el-menu-vertical-demo"
-                    :text-color="store.menuOpenOrNot ? '#fff' : ''" :default-active="store.nowSelectMenu"
-                    style="height: 100%">
+                <el-menu background-color="#334256" :collapse="!store.menuOpenOrNot" :collapse-transition="false"
+                    class="el-menu-vertical-demo" text-color="#fff" :default-active="store.nowSelectMenu"
+                    style="height: 100%;border-right:none">
                     <el-menu-item disabled style="cursor: default;" v-show="store3.showLogo">
                         <img src="/src/assets/images/logo.png" style="width: 40px;margin-left: -8px;" />
                         <h3 v-show="store.menuOpenOrNot" style="margin-left: 4px;">{{ t('menu.name') }}</h3>
@@ -72,10 +77,14 @@
                     </template>
                 </el-menu>
             </el-col>
-            <el-col :span="24 - store.menuWidth">
+            <!-- 右侧内容 -->
+            <el-col :span="24 - store.menuWidth"
+                :style="store.menuOpenOrNot ? 'padding-right:2px' : 'padding-left: ' + store3.mainContentLetf + 'px;padding-right:2px'">
                 <el-card class="box-card">
                     <div class="card-header">
+                        <!-- 面包屑 -->
                         <el-breadcrumb>
+                            <!-- 打开菜单图标 -->
                             <el-tooltip class="box-item" effect="dark" :content="t('main.openMenu')" placement="right">
                                 <el-icon @click="store.openMenuOrNot"
                                     v-show="!store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
@@ -83,6 +92,7 @@
                                     <Expand style="cursor: pointer;" />
                                 </el-icon>
                             </el-tooltip>
+                            <!-- 收起菜单图标 -->
                             <el-tooltip class="box-item" effect="dark" :content="t('main.closeMenu')" placement="right">
                                 <el-icon @click="store.openMenuOrNot"
                                     v-show="store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
@@ -158,7 +168,6 @@
                         </div>
                     </div>
                 </el-card>
-                <span style="margin-left: 11px;" v-show="!store.menuOpenOrNot"></span>
                 <!-- 已打开的页面标签 -->
                 <el-dropdown trigger="contextmenu" v-for="(item, index) in store2.tabs" v-show="store3.showPageTab">
                     <span class="el-dropdown-link">

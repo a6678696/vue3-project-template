@@ -9,13 +9,14 @@ export const useSettingStore = defineStore('useSettingStore', {
             i18nIsChinese: true,
             showOpenOrCloseMenuButton: true,
             showPageTab: true,
-            showLogo: true
+            showLogo: true,
+            mainContentLetf: 13
         }
     },
     persist: {
         key: 'useSettingStore',
         storage: localStorage,
-        paths: ['showSetFullScreenButton', 'showSetInternationalizationButton', 'showOpenOrCloseMenuButton', 'showPageTab', 'showLogo']
+        paths: ['showSetFullScreenButton', 'showSetInternationalizationButton', 'showOpenOrCloseMenuButton', 'showPageTab', 'showLogo','mainContentLetf']
     }
 })
 

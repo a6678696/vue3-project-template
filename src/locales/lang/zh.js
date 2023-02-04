@@ -36,7 +36,8 @@ export default {
             showPageTab: '页面的标签',
             showLogo: '菜单logo',
             display: '显示',
-            noDisplay:'不显示'
+            noDisplay:'不显示',
+            menuAndContentWidth:'菜单和右侧内容距离'
         }
     },
     login: {

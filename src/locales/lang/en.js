@@ -36,7 +36,8 @@ export default {
             showPageTab: 'Tags Of The Page',
             showLogo: 'Menu Logo',
             display: 'Display',
-            noDisplay:'No Display'
+            noDisplay:'No Display',
+            menuAndContentWidth:'The Distance Menu And Content'
         }
     },
     login: {
