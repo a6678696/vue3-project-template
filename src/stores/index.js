@@ -5,8 +5,6 @@ export const useSettingStore = defineStore('useSettingStore', {
         return {
             showSetFullScreenButton: true,
             fullScreen: false,
-            showSetInternationalizationButton: true,
-            i18nIsChinese: true,
             showOpenOrCloseMenuButton: true,
             showPageTab: true,
             showLogo: true,
@@ -16,7 +14,7 @@ export const useSettingStore = defineStore('useSettingStore', {
     persist: {
         key: 'useSettingStore',
         storage: localStorage,
-        paths: ['showSetFullScreenButton', 'showSetInternationalizationButton', 'showOpenOrCloseMenuButton', 'showPageTab', 'showLogo','mainContentLetf']
+        paths: ['showSetFullScreenButton', 'showOpenOrCloseMenuButton', 'showPageTab', 'showLogo','mainContentLetf']
     }
 })
 
@@ -33,36 +31,36 @@ export const useMenuStore = defineStore('useMenuStore', {
                     id: '1',
                     iconName: 'home',
                     currentComName: 'index',
-                    title: 'menu.home'
+                    title: '首页'
                 },
                 {
                     id: '2',
                     iconName: 'avatar',
                     currentComName: 'userManage',
-                    title: 'menu.userManage'
+                    title: '用户管理'
                 },
                 {
                     id: '3',
                     iconName: "announcement",
                     currentComName: 'announcementManage',
-                    title: 'menu.announcementManage'
+                    title: '公告管理'
                 },
                 {
                     id: '4',
                     iconName: 'bookmark',
-                    title: 'menu.typeManage',
+                    title: '商品分类管理',
                     children: [
                         {
                             id: '4-1',
                             iconName: 'bookmark-one',
                             currentComName: 'bigTypeManage',
-                            title: 'menu.bigTypeManage'
+                            title: '商品大类'
                         },
                         {
                             id: '4-2',
                             iconName: 'bookmark-one',
                             currentComName: 'smallTypeManage',
-                            title: 'menu.smallTypeManage'
+                            title: '商品小类'
                         }
                     ]
                 },
@@ -70,19 +68,19 @@ export const useMenuStore = defineStore('useMenuStore', {
                     id: '5',
                     iconName: 'commodity',
                     currentComName: 'goodsManage',
-                    title: 'menu.goodsManage'
+                    title: '商品管理'
                 },
                 {
                     id: '6',
                     iconName: 'order',
                     currentComName: 'orderManage',
-                    title: 'menu.orderManage'
+                    title: '订单管理'
                 },
                 {
                     id: '7',
                     iconName: 'star',
                     currentComName: 'valuationManage',
-                    title: 'menu.valuationManage'
+                    title: '评价管理'
                 }
             ]
         }
