@@ -89,12 +89,6 @@ import { IconPark } from '@icon-park/vue-next/es/all';
 import {
     SwitchButton,
     EditPen,
-    Expand,
-    Fold,
-    Back,
-    Right,
-    Top,
-    Odometer
 } from "@element-plus/icons-vue";
 import axiosUtil from '@/util/axios';
 import router from "@/router";
@@ -113,7 +107,7 @@ const store = useMenuStore();
 // 正在打开的页面
 const currentCom = shallowRef(index);
 // 正在打开的页面名称
-const currentBreadName = ref();
+const currentBreadName = ref('');
 
 //切换页面
 const changCurrentCom = (currentComName) => {
@@ -181,9 +175,6 @@ const logout = () => {
 </script>
 
 <style scoped>
-.el-menu {
-    height: 97vh
-}
 
 .card-header {
     display: flex;
@@ -194,9 +185,5 @@ const logout = () => {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 100%;
     min-height: 300px;
-}
-
-.el-tag-margin {
-    margin: 2px 1px;
 }
 </style>
