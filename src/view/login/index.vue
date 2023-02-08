@@ -32,10 +32,6 @@ import { Lock, User } from "@element-plus/icons-vue"
 import router from "@/router";
 import axiosUtil from '@/util/axios'
 import Vcode from "vue3-puzzle-vcode"
-import { IconPark } from '@icon-park/vue-next/es/all'
-
-import { useSettingStore } from "@/stores/index";
-const store = useSettingStore();
 
 const form = ref({
     userName: "",

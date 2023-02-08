@@ -1,43 +1,11 @@
 <template>
     <div style="overflow-x: hidden">
-        <!-- 系统设置抽屉 -->
-        <el-drawer title="系统设置" v-model="showDrawerOrNot" direction="rtl" :close-on-press-escape="false" size="40%">
-            <el-form label-position="left" label-width="37%">
-                <el-form-item label="显示全屏按钮">
-                    <el-switch v-model="store3.showSetFullScreenButton" inline-prompt active-text="是"
-                        inactive-text="否" style="--el-switch-off-color: #ff4949"/>
-                </el-form-item>
-                <el-form-item label="显示打开或关闭菜单按钮">
-                    <el-switch v-model="store3.showOpenOrCloseMenuButton" inline-prompt active-text="是"
-                        inactive-text="否" style="--el-switch-off-color: #ff4949"/>
-                </el-form-item>
-                <el-form-item label="显示页面的标签">
-                    <el-switch v-model="store3.showPageTab" inline-prompt active-text="是" inactive-text="否" style="--el-switch-off-color: #ff4949"/>
-                </el-form-item>
-                <el-form-item label="显示菜单标题">
-                    <el-switch v-model="store3.showLogo" inline-prompt active-text="是" inactive-text="否" style="--el-switch-off-color: #ff4949"/>
-                </el-form-item>
-                <el-form-item label="菜单和右侧内容距离" v-show="!store.menuOpenOrNot">
-                    <el-slider v-model="store3.mainContentLetf" show-input size="small" />
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <div style="flex: auto">
-                    <el-button type="danger" @click="showDrawerOrNot = false">关闭</el-button>
-                </div>
-            </template>
-        </el-drawer>
         <!-- 主体内容 -->
-        <el-row gutter="2">
+        <el-row :gutter="3">
             <!-- 左侧菜单 -->
-            <el-col :span="store.menuWidth">
-                <el-menu background-color="#334256" :collapse="!store.menuOpenOrNot" :collapse-transition="false"
-                    class="el-menu-vertical-demo" text-color="#fff" :default-active="store.nowSelectMenu"
-                    style="height: 100%;border-right:none">
-                    <el-menu-item disabled style="cursor: default;" v-show="store3.showLogo">
-                        <img src="/src/assets/images/logo.png" style="width: 40px;margin-left: -8px;" />
-                        <h3 v-show="store.menuOpenOrNot" style="margin-left: 4px;">后台管理系统模板</h3>
-                    </el-menu-item>
+            <el-col :span="4">
+                <el-menu background-color="#334256" class="el-menu-vertical-demo" text-color="#fff"
+                    :default-active="store.nowSelectMenu" style="height: 100%;border-right:none">
                     <template v-for="item in store.menuItems">
                         <!-- 没有下级菜单 -->
                         <template v-if="!item.children">
@@ -69,94 +37,45 @@
                 </el-menu>
             </el-col>
             <!-- 右侧内容 -->
-            <el-col :span="24 - store.menuWidth"
-                :style="store.menuOpenOrNot ? 'padding-right:2px' : 'padding-left: ' + store3.mainContentLetf + 'px;padding-right:2px'">
+            <el-col :span="20">
                 <el-card class="box-card">
-                    <div class="card-header">
-                        <!-- 面包屑 -->
-                        <el-breadcrumb>
-                            <!-- 打开菜单图标 -->
-                            <el-tooltip class="box-item" effect="dark" content="打开菜单" placement="right">
-                                <el-icon @click="store.openMenuOrNot"
-                                    v-show="!store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
-                                    style="float: left;" size="16" color="#57a1fd">
-                                    <Expand style="cursor: pointer;" />
-                                </el-icon>
-                            </el-tooltip>
-                            <!-- 收起菜单图标 -->
-                            <el-tooltip class="box-item" effect="dark" content="收起菜单" placement="right">
-                                <el-icon @click="store.openMenuOrNot"
-                                    v-show="store.menuOpenOrNot && store3.showOpenOrCloseMenuButton"
-                                    style="float: left;" size="16" color="#57a1fd">
-                                    <Fold style="cursor: pointer;" />
-                                </el-icon>
-                            </el-tooltip>
-                            <!-- 首页面包屑 -->
-                            <el-breadcrumb-item :style="store3.showOpenOrCloseMenuButton ? 'margin-left: 8px' : ''">
-                                <strong style="cursor: pointer;" @click="changCurrentCom('index')">首页</strong>
-                            </el-breadcrumb-item>
-                            <!-- 菜单名称面包屑 -->
-                            <el-breadcrumb-item v-for="item in currentBreadName">{{ item }}</el-breadcrumb-item>
-                        </el-breadcrumb>
-                        <div>
-                            <!-- 全屏显示按钮 -->
-                            <el-tooltip class="box-item" effect="dark" content="全屏" placement="left">
-                                <IconPark v-show="!store3.fullScreen && store3.showSetFullScreenButton"
-                                    type="full-screen" size="17" @click="fullScreenOrNot()"
-                                    style="color: grey;margin-right: 15px;" />
-                            </el-tooltip>
-                            <el-tooltip class="box-item" effect="dark" content="退出全屏" placement="left">
-                                <IconPark v-show="store3.fullScreen && store3.showSetFullScreenButton" type="off-screen"
-                                    size="17" @click="fullScreenOrNot()" style="color: grey;margin-right: 15px;" />
-                            </el-tooltip>
-                            <!-- 设置 -->
-                            <el-dropdown>
-                                <span class="el-dropdown-link" style="color: grey;">
-                                    <IconPark type="config" size="18" />
-                                </span>
-                                <template #dropdown>
-                                    <el-dropdown-menu>
-                                        <el-dropdown-item @click="showDrawerOrNot = true">
-                                            <el-icon>
-                                                <Odometer />
-                                            </el-icon>
-                                            系统设置
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click="modifyDialogVisible = true">
-                                            <el-icon>
-                                                <EditPen />
-                                            </el-icon>
-                                            修改密码
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click="logout">
-                                            <el-icon>
-                                                <SwitchButton />
-                                            </el-icon>
-                                            注销
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </template>
-                            </el-dropdown>
+                    <template #header>
+                        <div class="card-header">
+                            <!-- 面包屑 -->
+                            <el-breadcrumb>
+                                <!-- 首页面包屑 -->
+                                <el-breadcrumb-item>
+                                    <strong style="cursor: pointer;" @click="changCurrentCom('index')">首页</strong>
+                                </el-breadcrumb-item>
+                                <!-- 菜单名称面包屑 -->
+                                <el-breadcrumb-item v-for="item in currentBreadName">{{ item }}</el-breadcrumb-item>
+                            </el-breadcrumb>
+                            <div>
+                                <!-- 设置 -->
+                                <el-dropdown>
+                                    <span class="el-dropdown-link" style="color: grey;">
+                                        <IconPark type="config" size="18" />
+                                    </span>
+                                    <template #dropdown>
+                                        <el-dropdown-menu>
+                                            <el-dropdown-item @click="modifyDialogVisible = true">
+                                                <el-icon>
+                                                    <EditPen />
+                                                </el-icon>
+                                                修改密码
+                                            </el-dropdown-item>
+                                            <el-dropdown-item @click="logout">
+                                                <el-icon>
+                                                    <SwitchButton />
+                                                </el-icon>
+                                                注销
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </template>
+                                </el-dropdown>
+                            </div>
                         </div>
-                    </div>
-                </el-card>
-                <!-- 已打开的页面标签 -->
-                <el-dropdown trigger="contextmenu" v-for="(item, index) in store2.tabs" v-show="store3.showPageTab">
-                    <span class="el-dropdown-link">
-                        <el-tag @click="changCurrentCom('' + item.currentComName + '')" size="default"
-                            style="cursor: pointer;" :effect="item.selectOrNot ? 'dark' : 'plain'" closable
-                            class="el-tag-margin" @close="store2.removeTab('' + item.name + ''), openFirstTab()"><span
-                                v-show="item.selectOrNot">✿</span> {{ item.name }}</el-tag>
-                    </span>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item :icon="Top" @click="closeAll()">关闭全部</el-dropdown-item>
-                            <el-dropdown-item :icon="Back" @click="closeLeft(index)">关闭左侧</el-dropdown-item>
-                            <el-dropdown-item :icon="Right" @click="closeRight(index)">关闭右侧</el-dropdown-item>
-                        </el-dropdown-menu>
                     </template>
-                </el-dropdown>
-                <el-card class="box-card">
                     <component :is="currentCom"></component>
                 </el-card>
             </el-col>
@@ -179,7 +98,7 @@ import {
 } from "@element-plus/icons-vue";
 import axiosUtil from '@/util/axios';
 import router from "@/router";
-import { useMenuStore, useTabStore, useSettingStore } from "@/stores/index";
+import { useMenuStore } from "@/stores/index";
 // 导入可以打开的标签页
 import index from '@/view/index/index.vue'
 import userManage from '@/view/userManage/index.vue'
@@ -189,17 +108,8 @@ import smallTypeManage from '@/view/smallTypeManage/index.vue'
 import goodsManage from '@/view/goodsManage/index.vue'
 import orderManage from '@/view/orderManage/index.vue'
 import valuationManage from '@/view/valuationManage/index.vue'
-import screenfull from "screenfull"
 
 const store = useMenuStore();
-const store2 = useTabStore();
-const store3 = useSettingStore();
-store3.$subscribe((mutation, state) => {
-    if (state.showOpenOrCloseMenuButton === false) {
-        store.menuOpenOrNot = true;
-        store.menuWidth = 4;
-    }
-});
 // 正在打开的页面
 const currentCom = shallowRef(index);
 // 正在打开的页面名称
@@ -247,11 +157,6 @@ const changCurrentCom = (currentComName) => {
         currentCom.value = valuationManage;
         store.nowSelectMenu = '7';
     }
-    if (currentComName !== "index") {
-        store2.addTab(currentBreadName.value[currentBreadName.value.length - 1], true, currentComName)
-    } else {
-        store2.addTab('首页', true, currentComName)
-    }
 }
 
 //注销登录
@@ -273,96 +178,6 @@ const logout = () => {
         .catch(() => {
         })
 }
-
-// 关闭正在打开的标签页时打开第一个标签页
-const openFirstTab = () => {
-    if (store2.removeSelectTab) {
-        changCurrentCom(store2.tabs[0].currentComName)
-    }
-}
-
-// 关闭左侧
-const closeLeft = (index) => {
-    // 如果是第一个标签页,方法不往下执行,因为左侧没有要关闭的标签页
-    if (index === 0) {
-        return false;
-    }
-    // 用于标记是否关闭了已选中的标签页
-    let flag = false;
-    for (let i = 0; i < index; i++) {
-        const element = store2.tabs[i];
-        // 关闭的标签页中有一个是选中的
-        if (element.selectOrNot) {
-            flag = true;
-            break;
-        }
-    }
-    store2.tabs.splice(0, index);
-    if (flag) {
-        // 打开第一个标签页
-        changCurrentCom(store2.tabs[0].currentComName)
-    }
-}
-
-// 关闭左侧
-const closeRight = (index) => {
-    // 如果是最后一个标签页,方法不往下执行,因为右侧没有要关闭的标签页
-    if (index === store2.tabs.length - 1) {
-        return false;
-    }
-    // 用于标记是否关闭了已选中的标签页
-    let flag = false;
-    for (let i = index + 1; i < store2.tabs.length; i++) {
-        const element = store2.tabs[i];
-        // 关闭的标签页中有一个是选中的
-        if (element.selectOrNot) {
-            flag = true;
-            break;
-        }
-    }
-    store2.tabs.splice(index + 1, store2.tabs.length - index - 1);
-    if (flag) {
-        // 打开第一个标签页
-        changCurrentCom(store2.tabs[0].currentComName)
-    }
-}
-
-// 关闭全部
-const closeAll = () => {
-    store2.tabs.splice(0, store2.tabs.length);
-    // 要添加的标签对象
-    const tab = {
-        name: '首页',
-        selectOrNot: true,
-        currentComName: 'index'
-    }
-    // 添加
-    store2.tabs.push(tab);
-    // 打开第一个标签页
-    changCurrentCom(store2.tabs[0].currentComName)
-}
-
-// 打开上次选中的标签页
-const openSelectTab = () => {
-    for (let i = 0; i < store2.tabs.length; i++) {
-        const element = store2.tabs[i];
-        if (element.selectOrNot) {
-            changCurrentCom(store2.tabs[i].currentComName);
-            break;
-        }
-    }
-}
-openSelectTab();
-
-// 页面全屏与否
-const fullScreenOrNot = () => {
-    screenfull.toggle();
-    setTimeout(() => {
-        store3.fullScreen = screenfull.isFullscreen
-    }, 100);
-}
-
-const showDrawerOrNot = ref(false)
 </script>
 
 <style scoped>
